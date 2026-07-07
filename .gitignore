@@ -1,0 +1,103 @@
+# ==========================
+# Java / Spring Boot
+# ==========================
+target/
+build/
+out/
+bin/
+
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+
+# ==========================
+# IDE
+# ==========================
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# NetBeans
+nbproject/
+
+# ==========================
+# OS
+# ==========================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# ==========================
+# Logs
+# ==========================
+
+logs/
+*.log
+
+# ==========================
+# Environment
+# ==========================
+
+.env
+.env.*
+
+# ==========================
+# Spring Boot
+# ==========================
+
+application-local.properties
+application-dev.properties
+application-prod.properties
+
+# ==========================
+# MySQL Data (Docker Volume)
+# ==========================
+
+mysql/mysql-data/
+**/mysql-data/
+
+# MySQL runtime files
+*.sock
+*.pid
+*.err
+*.cnf
+ib*
+binlog*
+undo*
+relay-log*
+auto.cnf
+
+# ==========================
+# Docker
+# ==========================
+
+docker-data/
+volumes/
+
+# ==========================
+# Temporary files
+# ==========================
+
+*.tmp
+*.temp
+*.swp

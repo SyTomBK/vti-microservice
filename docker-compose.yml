@@ -1,0 +1,172 @@
+version: "3.9"
+
+services:
+
+  # =========================
+  # EUREKA SERVER
+  # =========================
+  eureka-server:
+    container_name: eureka-server
+    build:
+      context: ./eureka-server/eureka-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - spring-microservice
+    restart: unless-stopped
+
+  # =========================
+  # CONFIG SERVER
+  # =========================
+  config-service:
+    container_name: config-service
+    build:
+      context: ./config-service/config-service
+      dockerfile: Dockerfile
+    ports:
+      - "8763:8763"
+    networks:
+      - spring-microservice
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    restart: unless-stopped
+
+  # =========================
+  # MYSQL
+  # =========================
+  mysql:
+    container_name: mysql
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+      args:
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql/mysql-data:/var/lib/mysql
+    networks:
+      - spring-microservice
+    restart: unless-stopped
+
+  # =========================
+  # API GATEWAY
+  # =========================
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: ./api-gateway/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8762:8762"
+    networks:
+      - spring-microservice
+    depends_on:
+      - eureka-server
+      - config-service
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    restart: unless-stopped
+
+  # =========================
+  # DEPARTMENT SERVICE
+  # =========================
+  department-service:
+    container_name: department-service
+    build:
+      context: ./department-service/department-service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-microservice
+    depends_on:
+      - mysql
+      - eureka-server
+      - config-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/microservice?createDatabaseIfNotExist=true&characterEncoding=UTF-8&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: sytom
+      SPRING_DATASOURCE_PASSWORD: Dungsihai@1996
+      SPRING_APPLICATION_NAME: department-service
+    restart: unless-stopped
+
+  department-service-1:
+    container_name: department-service-1
+    build:
+      context: ./department-service/department-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8080"
+    networks:
+      - spring-microservice
+    depends_on:
+      - mysql
+      - eureka-server
+      - config-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/microservice?createDatabaseIfNotExist=true&characterEncoding=UTF-8&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: sytom
+      SPRING_DATASOURCE_PASSWORD: Dungsihai@1996
+      SPRING_APPLICATION_NAME: department-service
+    restart: unless-stopped
+
+  # =========================
+  # ACCOUNT SERVICE
+  # =========================
+  account-service:
+    container_name: account-service
+    build:
+      context: ./account-service/account-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - spring-microservice
+    depends_on:
+      - mysql
+      - eureka-server
+      - config-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/microservice?createDatabaseIfNotExist=true&characterEncoding=UTF-8&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: sytom
+      SPRING_DATASOURCE_PASSWORD: Dungsihai@1996
+      SPRING_APPLICATION_NAME: account-service
+    restart: unless-stopped
+
+  # =========================
+  # AUTH SERVICE
+  # =========================
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ./auth-service/auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    networks:
+      - spring-microservice
+    depends_on:
+      - mysql
+      - eureka-server
+      - config-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/microservice?createDatabaseIfNotExist=true&characterEncoding=UTF-8&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: sytom
+      SPRING_DATASOURCE_PASSWORD: Dungsihai@1996
+      SPRING_APPLICATION_NAME: auth-service
+    restart: unless-stopped
+
+# =========================
+# NETWORK
+# =========================
+networks:
+  spring-microservice:
+    driver: bridge
