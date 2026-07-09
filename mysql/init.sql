@@ -29,17 +29,19 @@ CREATE TABLE account(
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
                        id bigint NOT NULL AUTO_INCREMENT,
-                       email varchar(50) NOT NULL,
-                       password varchar(120) NOT NULL,
-                       username varchar(20) NOT NULL,
-                       firstname varchar(20),
-                       lastname varchar(20),
-                       access_token varchar(255),
-                       refresh_token varchar(255),
-                       role ENUM('USER','ADMIN','MANAGER') NOT NULL,
+                       username varchar(10),
+                       firstname varchar(50),
+                       lastname varchar(50),
+                       email varchar(50),
+                       password varchar(150),
+                       role ENUM('USER', 'ADMIN', 'MANAGER') NOT NULL,
+                       access_token varchar(150),
+                       refresh_token varchar(150),
+                       provider ENUM('local', 'facebook', 'google', 'github') DEFAULT 'local',
+                       provider_id varchar(100),
+                       image_url varchar(200),
                        PRIMARY KEY (id),
-                       UNIQUE KEY (username),
-                       UNIQUE KEY (email)
+                       UNIQUE KEY (password)
 );
 
 -- Create table refreshtoken
