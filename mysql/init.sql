@@ -29,14 +29,14 @@ CREATE TABLE account(
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
                        id bigint NOT NULL AUTO_INCREMENT,
-                       username varchar(10),
+                       username varchar(50),
                        firstname varchar(50),
                        lastname varchar(50),
                        email varchar(50),
                        password varchar(150),
                        role ENUM('USER', 'ADMIN', 'MANAGER') NOT NULL,
-                       access_token varchar(150),
-                       refresh_token varchar(150),
+                       access_token varchar(255),
+                       refresh_token varchar(255),
                        provider ENUM('local', 'facebook', 'google', 'github') DEFAULT 'local',
                        provider_id varchar(100),
                        image_url varchar(200),
